@@ -45,7 +45,6 @@
 
 <div class="container">
     <h1>Welcome</h1>
-    <p>Please choose an option:</p>
     <a href="register.php"><button>Register</button></a>
     <a href="login.php"><button>Login</button></a>
 </div>
