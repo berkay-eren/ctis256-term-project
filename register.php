@@ -43,8 +43,14 @@ if ($_SESSION['step'] === 3 && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_
             $_SESSION['verification_code']
         ]);
         session_destroy(); 
-        echo "<p>Registration complete. You may now log in.</p>";
-        exit;
+
+        echo "
+        <div style='text-align:center; padding: 50px;'>
+            <h2 style='color: green;'>Registration Complete</h2>
+            <p>Your registration was successful. You can now log in.</p>
+            <a href='login.php' style='padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;'>Log In</a>
+        </div>";
+        
     } else {
         echo "<p>Invalid verification code.</p>";
     }
