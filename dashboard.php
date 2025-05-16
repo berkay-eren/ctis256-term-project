@@ -18,8 +18,16 @@ if ($user_type === 'market') {
     $stmt = $db->prepare("SELECT * FROM products WHERE market_id = ? ORDER BY id DESC");
     $stmt->execute([$user_id]);
     $products = $stmt->fetchAll();
-}
-?>
+
+?>    
+<?php } elseif ($user_type == 'consumer') { ?>
+    <div class="market-actions">
+        <a href="search.php">Search Products</a>
+        <a href="cart.php">View Cart</a>
+        <a href="edit_info.php">Edit Profile</a>
+    </div>
+<?php } ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

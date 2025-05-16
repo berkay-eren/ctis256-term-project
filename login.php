@@ -14,6 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isset($_P
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['email'] = $user['email'];
         $_SESSION['user_type'] = $user['user_type'];
+        $_SESSION['city'] = $user['city']; 
+        $_SESSION['district'] = $user['district'];
         header('Location: dashboard.php'); 
         exit;
     } else {
