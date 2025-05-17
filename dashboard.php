@@ -362,6 +362,7 @@ h2 {
     <?php } ?>
 
     <form method="POST" action="logout.php">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
         <button type="submit" class="logout-button">Log Out</button>
     </form>
 </div>
