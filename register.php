@@ -1,44 +1,71 @@
 <?php
 session_start();
-require_once './db.php';
+require_once 'db.php';
+require_once 'mail.php';
 
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-
-$error_message = '';
-$email = '';
+$error = '';
+$success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+    if (isset($_POST['send_otp'])) {
+        $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+        if (!$email) {
+            $error = "Please enter a valid email.";
+        } else {
+            $otp = rand(100000, 999999);
+            $_SESSION['otp'] = $otp;
+            $_SESSION['otp_email'] = $email;
+            $_SESSION['otp_time'] = time();
 
-    if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
-        die('Invalid CSRF token');
+            if (sendVerificationCode($email, $otp)) {
+                $_SESSION['otp_sent'] = true;
+                $success = "Verification code sent to your email.";
+            } else {
+                $error = "Failed to send email. Please try again.";
+            }
+        }
     }
 
-    $email = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
-    $password = $_POST['pass'] ?? '';
-    $confirm_password = $_POST['confirm_pass'] ?? '';
+    if (isset($_POST['verify_otp'])) {
+        $email = $_SESSION['otp_email'] ?? '';
+        $user_otp = $_POST['otp'] ?? '';
+        $password = $_POST['pass'] ?? '';
+        $user_type = $_POST['user_type'] ?? '';
 
-    if (!$email) {
-        $error_message = "Invalid email format.";
-    } elseif (strlen($password) < 6) {
-        $error_message = "Password must be at least 6 characters.";
-    } elseif ($password !== $confirm_password) {
-        $error_message = "Passwords do not match.";
-    } else {
+        if (!isset($_SESSION['otp_time']) || (time() - $_SESSION['otp_time']) > 600) {
+            $error = "Verification code expired. Please request a new one.";
+            unset($_SESSION['otp'], $_SESSION['otp_email'], $_SESSION['otp_time'], $_SESSION['otp_sent']);
+        }
 
-        $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
-        $stmt->execute([$email]);
-        if ($stmt->fetch()) {
-            $error_message = "Email already registered.";
-        } else {
-            
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            $insert = $db->prepare("INSERT INTO users (email, pass) VALUES (?, ?)");
-            $insert->execute([$email, $hashed_password]);
+        elseif (!isset($_SESSION['otp']) || $user_otp != $_SESSION['otp']) {
+            $error = "Incorrect verification code.";
+        }
+       
+        elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error = "Invalid email address.";
+        }
+        
+        elseif (strlen($password) < 6) {
+            $error = "Password must be at least 6 characters.";
+        }
+       
+        elseif (!in_array($user_type, ['consumer', 'market'])) {
+            $error = "Please select a valid user type.";
+        }
+        else {
+            $passHash = password_hash($password, PASSWORD_DEFAULT);
 
-            header('Location: registration_success.php');
-            exit;
+            $stmt = $db->prepare("INSERT INTO users (email, pass, user_type) VALUES (?, ?, ?)");
+            $inserted = $stmt->execute([$email, $passHash, $user_type]);
+
+            if ($inserted) {
+                unset($_SESSION['otp'], $_SESSION['otp_email'], $_SESSION['otp_time'], $_SESSION['otp_sent']);
+                header("Location: registration_success.php");
+                exit;
+            } else {
+                $error = "Error during registration. Please try again.";
+            }
         }
     }
 }
@@ -51,80 +78,88 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Register</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #e6f4ea;
-        margin: 0;
-        padding: 0;
-    }
-    .container {
-        width: 100%;
-        max-width: 400px;
-        margin: 5em auto;
-        padding: 20px;
-        background-color: #fff;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    }
-    h2 {
-        text-align: center;
-        color: #333;
-    }
-    label {
-        font-weight: bold;
-        color: #555;
-    }
-    input, button {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        box-sizing: border-box;
-        font-size: 14px;
-    }
-    input:focus, button:focus {
-        outline: none;
-        border-color: #4CAF50;
-    }
-    button {
-        background-color: #4CAF50;
-        color: white;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        font-weight: bold;
-    }
-    button:hover {
-        background-color: #45a049;
-    }
-    .error {
-        color: red;
-        text-align: center;
-    }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e6f4ea;
+    margin: 0; padding: 0;
+}
+.container {
+    max-width: 400px;
+    margin: 3em auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+label, select, input, button {
+    width: 100%;
+    margin: 10px 0;
+    box-sizing: border-box;
+}
+input, select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+button {
+    background-color: #4CAF50;
+    border: none;
+    padding: 10px;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #45a049;
+}
+.error {
+    color: red;
+    text-align: center;
+}
+.success {
+    color: green;
+    text-align: center;
+}
 </style>
 </head>
 <body>
+
 <div class="container">
     <h2>Register</h2>
 
-    <?php if ($error_message): ?>
-        <div class="error"><?= htmlspecialchars($error_message) ?></div>
+    <?php if($error): ?>
+        <div class="error"><?= htmlspecialchars($error) ?></div>
+    <?php endif; ?>
+    <?php if($success): ?>
+        <div class="success"><?= htmlspecialchars($success) ?></div>
     <?php endif; ?>
 
-    <form method="POST" action="">
-        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>" />
+    <?php if (!isset($_SESSION['otp_sent'])): ?>
+        <form method="POST">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required value="<?=htmlspecialchars($_POST['email'] ?? '')?>">
+            <button type="submit" name="send_otp">Send Verification Code</button>
+        </form>
+    <?php else: ?>
+        <form method="POST">
+            <label for="otp">Verification Code</label>
+            <input type="text" name="otp" id="otp" maxlength="6" pattern="\d{6}" required>
 
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required value="<?= htmlspecialchars($email) ?>" />
+            <label for="pass">Password</label>
+            <input type="password" name="pass" id="pass" required>
 
-        <label for="pass">Password</label>
-        <input type="password" id="pass" name="pass" required minlength="6" />
+            <label for="user_type">User Type</label>
+            <select name="user_type" id="user_type" required>
+                <option value="">Select</option>
+                <option value="consumer">Consumer</option>
+                <option value="market">Market</option>
+            </select>
 
-        <label for="confirm_pass">Confirm Password</label>
-        <input type="password" id="confirm_pass" name="confirm_pass" required minlength="6" />
-
-        <button type="submit">Register</button>
-    </form>
+            <button type="submit" name="verify_otp">Register</button>
+        </form>
+    <?php endif; ?>
 </div>
+
 </body>
 </html>
