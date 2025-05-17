@@ -56,8 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         else {
             $passHash = password_hash($password, PASSWORD_DEFAULT);
 
-            $stmt = $db->prepare("INSERT INTO users (email, pass, user_type) VALUES (?, ?, ?)");
-            $inserted = $stmt->execute([$email, $passHash, $user_type]);
+            $stmt = $db->prepare("INSERT INTO users (email, pass, user_type, is_verified) VALUES (?, ?, ?, ?)");
+            $inserted = $stmt->execute([$email, $passHash, $user_type, 1]);
 
             if ($inserted) {
                 unset($_SESSION['otp'], $_SESSION['otp_email'], $_SESSION['otp_time'], $_SESSION['otp_sent']);
