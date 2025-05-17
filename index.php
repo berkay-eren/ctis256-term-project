@@ -38,7 +38,7 @@ session_start();
             margin-bottom: 20px;
         }
         a, button {
-            background-color: #4CAF50; /* Tam yeşil */
+            background-color: #4CAF50; 
             color: white;
             border: none;
             padding: 12px;
@@ -54,7 +54,7 @@ session_start();
             box-sizing: border-box;
         }
         a:hover, button:hover {
-            background-color: #388e3c; /* Koyu yeşil hover */
+            background-color: #388e3c; 
             text-decoration: none;
         }
         form {

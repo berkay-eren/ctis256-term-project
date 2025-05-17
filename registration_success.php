@@ -11,7 +11,7 @@ session_start();
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #e6f4ea; /* register ile aynı arka plan */
+            background-color: #e6f4ea; 
             margin: 0;
             padding: 0;
             display: flex;
@@ -29,7 +29,7 @@ session_start();
             text-align: center;
         }
         h2 {
-            color: #28a745; /* yeşil başarılı mesaj rengi */
+            color: #28a745; 
             margin-bottom: 20px;
         }
         p {
@@ -56,7 +56,7 @@ session_start();
 <body>
     <div class="container">
         <h2>🎉 Registration Successful</h2>
-        <p>You’re now registered. You can go to the home page.</p>
+        <p>You're now registered. You can go to the home page.</p>
         <form method="post" action="index.php">
             <button type="submit" class="btn">Go to Home</button>
         </form>

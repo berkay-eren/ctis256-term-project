@@ -36,242 +36,213 @@ if ($user_type === 'market') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f7fc;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 100%;
-            max-width: 600px;
-            margin: 10px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-        .user-info {
-            margin: 20px 0;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #fafafa;
-        }
-        .user-info p {
-            margin: 5px 0;
-            font-size: 16px;
-        }
-        .logout-button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background-color: #f44336;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            text-align: center;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 20px;
-        }
-        .logout-button:hover {
-            background-color: #e53935;
-        }
-        .market-actions {
-            display: flex;
-            gap: 50px;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        .market-actions a {
-            display: inline-block;
-            padding: 8px 16px;
-            margin: 4px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
-        }
-        .market-actions a:hover {
-            background-color: #45a049;
-        }
-        .product-list {
-            margin-top: 30px;
-        }
-        
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px 0;
-        }
-        
-        .product-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: transform 0.2s;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .product-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-        
-        .product-info {
-            padding: 15px;
-        }
-        
-        .product-title {
-            font-size: 1.1em;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        
-        .product-price {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .normal-price {
-            color: #666;
-            text-decoration: line-through;
-        }
-        
-        .discounted-price {
-            color: #e53935;
-            font-weight: bold;
-        }
-        
-        .stock-info {
-            color: #666;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-        
-        .expiration-date {
-            color: #666;
-            font-size: 0.9em;
-            margin-bottom: 15px;
-        }
-        
-        .product-actions {
-            display: flex;
-            gap: 10px;
-            padding: 10px 15px;
-            background: #f8f9fa;
-            border-top: 1px solid #eee;
-        }
-        
-        .product-actions a {
-            flex: 1;
-            text-align: center;
-            padding: 8px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 0.9em;
-            transition: background-color 0.2s;
-        }
-        
-        .edit-btn {
-            background-color: #2196F3;
-            color: white;
-        }
-        
-        .edit-btn:hover {
-            background-color: #1976D2;
-        }
-        
-        .delete-btn {
-            background-color: #f44336;
-            color: white;
-        }
-        
-        .delete-btn:hover {
-            background-color: #d32f2f;
-        }
-        
-        .add-product-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        
-        .add-product-btn:hover {
-            background-color: #45a049;
-        }
-        
-        .no-products {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+    }
 
-        /* Add styles for expired products */
-        .product-card.expired {
-            position: relative;
-            opacity: 0.7;
-        }
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 25px 30px;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
 
-        .product-card.expired::before {
-            content: "EXPIRED";
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #f44336;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            z-index: 1;
-        }
+    h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-weight: 700;
+        color: #007bff;
+        font-size: 2rem;
+    }
 
-        .product-card.expired .product-image {
-            filter: grayscale(100%);
-        }
+    .user-info {
+        background-color: #e9ecef;
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        border: 1px solid #ced4da;
+    }
 
-        .product-card.expired .product-info {
-            background-color: #f8f8f8;
-        }
+    .user-info p {
+        margin: 8px 0;
+        font-size: 1rem;
+        font-weight: 500;
+    }
 
-        .product-card.expired .product-title {
-            color: #999;
-        }
+    .user-info strong {
+        color: #0056b3;
+    }
 
-        .product-card.expired .product-price {
-            color: #999;
-        }
+    .product-list h2 {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+        color: #495057;
+    }
 
-        .product-card.expired .stock-info,
-        .product-card.expired .expiration-date {
-            color: #999;
-        }
+    .no-products {
+        background-color: #fff3cd;
+        border: 1px solid #ffeeba;
+        padding: 30px 15px;
+        border-radius: 8px;
+        color: #856404;
+        font-weight: 600;
+        text-align: center;
+        font-size: 1.1rem;
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+    }
+
+    .product-card {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        border: 1px solid #dee2e6;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        transition: box-shadow 0.2s ease;
+        position: relative;
+    }
+
+    .product-card:hover {
+        box-shadow: 0 6px 12px rgba(0, 123, 255, 0.25);
+    }
+
+    .product-image {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin-bottom: 15px;
+        background-color: #dee2e6;
+    }
+
+    .product-info {
+        flex-grow: 1;
+    }
+
+    .product-title {
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+        color: #212529;
+    }
+
+    .product-price {
+        margin-bottom: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        color: #28a745;
+    }
+
+    .normal-price {
+        text-decoration: line-through;
+        color: #6c757d;
+        margin-right: 10px;
+    }
+
+    .discounted-price {
+        color: #dc3545;
+        font-weight: 700;
+    }
+
+    .stock-info,
+    .expiration-date {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-bottom: 6px;
+    }
+
+    .product-actions {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+    }
+
+    .product-actions a {
+        flex: 1;
+        text-align: center;
+        padding: 8px 0;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-decoration: none;
+        color: white;
+        user-select: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .edit-btn {
+        background-color: #007bff;
+    }
+
+    .edit-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .delete-btn {
+        background-color: #dc3545;
+    }
+
+    .delete-btn:hover {
+        background-color: #a71d2a;
+    }
+
+    .product-card.expired {
+        background-color: #fff3f3;
+        border-color: #dc3545;
+    }
+
+    .product-card.expired .product-image {
+        filter: grayscale(90%);
+    }
+
+    .product-card.expired::before {
+        content: "SÜRESİ DOLDU";
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #dc3545;
+        color: white;
+        font-weight: 700;
+        font-size: 12px;
+        padding: 3px 9px;
+        border-radius: 20px;
+        box-shadow: 0 0 6px #dc3545aa;
+    }
+
+    form.logout-form {
+        margin-top: 40px;
+        text-align: center;
+    }
+
+    .logout-button {
+        background-color: #dc3545;
+        border: none;
+        color: white;
+        padding: 14px 35px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: 30px;
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .logout-button:hover {
+        background-color: #a71d2a;
+    }
+</style>
     </style>
 </head>
 <body>
