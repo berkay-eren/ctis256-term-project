@@ -9,11 +9,23 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'consumer') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $consumer_id = $_SESSION['user_id'];
-    $product_id = $_POST['product_id'];
-    $market_id = $_POST['market_id'];
-    $quantity = intval($_POST['quantity']);
+    $product_id = $_POST['product_id'] ?? null;
+    $market_id = $_POST['market_id'] ?? null;
+    $quantity = isset($_POST['quantity']) ? intval($_POST['quantity']) : 1;
     if ($quantity < 1) $quantity = 1;
 
+    // Varsayılan redirect dashboard.php olsun
+    $redirect = 'dashboard.php';
+
+    if (isset($_POST['redirect_to']) && !empty($_POST['redirect_to'])) {
+        $redirect_to = $_POST['redirect_to'];
+        // Basit regex ile güvenlik: sadece php dosyası + opsiyonel query parametre
+        if (preg_match('/^[a-zA-Z0-9_\-]+\.php(\?.*)?$/', $redirect_to)) {
+            $redirect = $redirect_to;
+        }
+    }
+
+    // Stok kontrolü
     $stmt = $db->prepare("SELECT stock FROM products WHERE market_id = ? AND id = ?");
     $stmt->execute([$market_id, $product_id]);
     $stock = $stmt->fetchColumn();
@@ -22,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Product not found.");
     }
 
+    // Sepette mevcutsa miktarı al
     $stmt = $db->prepare("SELECT id, quantity FROM shopping_cart WHERE consumer_id = ? AND market_id = ? AND product_id = ?");
     $stmt->execute([$consumer_id, $market_id, $product_id]);
     $existing = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -42,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$consumer_id, $market_id, $product_id, $quantity]);
     }
 
-    header("Location: search.php?q=" . urlencode($_GET['q'] ?? ''));
+    header("Location: $redirect");
     exit;
 }
 ?>
