@@ -37,213 +37,259 @@ if ($user_type === 'market') {
     <title>Dashboard</title>
     <style>
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f5f5f5;
-        margin: 0;
-        padding: 20px;
-        color: #333;
-    }
+    background: #e6f4ea;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
 
-    .container {
-        max-width: 900px;
-        margin: 0 auto;
-        background-color: white;
-        padding: 25px 30px;
-        border-radius: 10px;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    }
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
 
-    h2 {
-        text-align: center;
-        margin-bottom: 25px;
-        font-weight: 700;
-        color: #007bff;
-        font-size: 2rem;
-    }
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 700;
+    color: #4CAF50;
+    font-size: 2rem;
+}
 
-    .user-info {
-        background-color: #e9ecef;
-        padding: 15px 20px;
-        border-radius: 8px;
-        margin-bottom: 25px;
-        border: 1px solid #ced4da;
-    }
+.user-info {
+    background-color: #f0faf2;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    border: 1px solid #a1d8a3;
+    color: #333;
+}
 
-    .user-info p {
-        margin: 8px 0;
-        font-size: 1rem;
-        font-weight: 500;
-    }
+.user-info p {
+    margin: 8px 0;
+    font-size: 1rem;
+    font-weight: 500;
+}
 
-    .user-info strong {
-        color: #0056b3;
-    }
+.user-info strong {
+    color: #388e3c;
+}
 
-    .product-list h2 {
-        font-size: 1.6rem;
-        margin-bottom: 20px;
-        color: #495057;
-    }
+.product-list h2 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    color: #333;
+}
 
-    .no-products {
-        background-color: #fff3cd;
-        border: 1px solid #ffeeba;
-        padding: 30px 15px;
-        border-radius: 8px;
-        color: #856404;
-        font-weight: 600;
-        text-align: center;
-        font-size: 1.1rem;
-    }
+.no-products {
+    background-color: #fff7e6;
+    border: 1px solid #ffecb3;
+    padding: 30px 15px;
+    border-radius: 10px;
+    color: #555;
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.1rem;
+}
 
-    .product-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
-    }
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
 
-    .product-card {
-        background-color: #f8f9fa;
-        border-radius: 10px;
-        border: 1px solid #dee2e6;
-        padding: 15px;
-        display: flex;
-        flex-direction: column;
-        transition: box-shadow 0.2s ease;
-        position: relative;
-    }
+.product-card {
+    background-color: #f9fff7;
+    border-radius: 12px;
+    border: 1px solid #a1d8a3;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s ease;
+    position: relative;
+    color: #333;
+}
 
-    .product-card:hover {
-        box-shadow: 0 6px 12px rgba(0, 123, 255, 0.25);
-    }
+.product-card:hover {
+    box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
+}
 
-    .product-image {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-        border-radius: 6px;
-        margin-bottom: 15px;
-        background-color: #dee2e6;
-    }
+.product-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    background-color: #d0f0c0;
+}
 
-    .product-info {
-        flex-grow: 1;
-    }
+.product-info {
+    flex-grow: 1;
+}
 
-    .product-title {
-        font-weight: 600;
-        font-size: 1.2rem;
-        margin-bottom: 8px;
-        color: #212529;
-    }
+.product-title {
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: #2e7d32;
+}
 
-    .product-price {
-        margin-bottom: 12px;
-        font-weight: 600;
-        font-size: 1rem;
-        color: #28a745;
-    }
+.product-price {
+    margin-bottom: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #4CAF50;
+}
 
-    .normal-price {
-        text-decoration: line-through;
-        color: #6c757d;
-        margin-right: 10px;
-    }
+.normal-price {
+    text-decoration: line-through;
+    color: #7b7b7b;
+    margin-right: 10px;
+}
 
-    .discounted-price {
-        color: #dc3545;
-        font-weight: 700;
-    }
+.discounted-price {
+    color: #388e3c;
+    font-weight: 700;
+}
 
-    .stock-info,
-    .expiration-date {
-        font-size: 0.9rem;
-        color: #6c757d;
-        margin-bottom: 6px;
-    }
+.stock-info,
+.expiration-date {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 6px;
+}
 
-    .product-actions {
-        margin-top: 15px;
-        display: flex;
-        gap: 10px;
-        justify-content: space-between;
-    }
+.product-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
 
-    .product-actions a {
-        flex: 1;
-        text-align: center;
-        padding: 8px 0;
-        border-radius: 6px;
-        font-weight: 600;
-        font-size: 0.95rem;
-        text-decoration: none;
-        color: white;
-        user-select: none;
-        transition: background-color 0.3s ease;
-    }
+.product-actions a {
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    color: white;
+    user-select: none;
+    transition: background-color 0.3s ease;
+}
 
-    .edit-btn {
-        background-color: #007bff;
-    }
+.edit-btn {
+    background-color: #4CAF50;
+}
 
-    .edit-btn:hover {
-        background-color: #0056b3;
-    }
+.edit-btn:hover {
+    background-color: #388e3c;
+}
 
-    .delete-btn {
-        background-color: #dc3545;
-    }
+.delete-btn {
+    background-color: #d32f2f;
+}
 
-    .delete-btn:hover {
-        background-color: #a71d2a;
-    }
+.delete-btn:hover {
+    background-color: #a12727;
+}
 
-    .product-card.expired {
-        background-color: #fff3f3;
-        border-color: #dc3545;
-    }
+.product-card.expired {
+    background-color: #fff0f0;
+    border-color: #d32f2f;
+    color: #7b0000;
+}
 
-    .product-card.expired .product-image {
-        filter: grayscale(90%);
-    }
+.product-card.expired .product-image {
+    filter: grayscale(90%);
+}
 
-    .product-card.expired::before {
-        content: "SÜRESİ DOLDU";
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background-color: #dc3545;
-        color: white;
-        font-weight: 700;
-        font-size: 12px;
-        padding: 3px 9px;
-        border-radius: 20px;
-        box-shadow: 0 0 6px #dc3545aa;
-    }
+.product-card.expired::before {
+    content: "SÜRESİ DOLDU";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #d32f2f;
+    color: white;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    box-shadow: 0 0 6px #d32f2faa;
+}
 
-    form.logout-form {
-        margin-top: 40px;
-        text-align: center;
-    }
+/* MARKET ACTIONS */
+.market-actions {
+    margin: 30px 10px 40px 10px;
+    text-align: center;
+}
 
-    .logout-button {
-        background-color: #dc3545;
-        border: none;
-        color: white;
-        padding: 14px 35px;
-        font-size: 1.1rem;
-        font-weight: 700;
-        border-radius: 30px;
-        cursor: pointer;
-        user-select: none;
-        transition: background-color 0.3s ease;
-    }
+.market-actions a {
+    display: inline-block;
+    padding: 12px 25px;
+    margin: 10px 10px 20px 0;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    color: white;
+    user-select: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
 
-    .logout-button:hover {
-        background-color: #a71d2a;
-    }
+.market-actions a[href="add_product.php"] {
+    background-color: #4CAF50;
+}
+
+.market-actions a[href="add_product.php"]:hover {
+    background-color: #388e3c;
+    box-shadow: 0 6px 12px rgba(56, 142, 60, 0.5);
+}
+
+.market-actions a[href="edit_info.php"] {
+    background-color: #2196F3;
+}
+
+.market-actions a[href="edit_info.php"]:hover {
+    background-color: #1769aa;
+    box-shadow: 0 6px 12px rgba(23, 105, 170, 0.5);
+}
+
+/* LOGOUT FORM */
+.logout-form {
+    width: 200px;
+    margin: 40px auto 0 auto;
+    text-align: center;
+}
+
+.logout-button {
+    background-color: #d32f2f;
+    border: none;
+    color: white;
+    padding: 14px 40px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 30px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    display: block;
+    letter-spacing: 1px;
+}
+
+.logout-button:hover {
+    background-color: #a12727;
+    box-shadow: 0 6px 12px rgba(161, 39, 39, 0.6);
+}
+
 </style>
-    </style>
+
 </head>
 <body>
 
