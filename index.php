@@ -1,52 +1,84 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Home</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            background: #e6f4ea;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            background-color: #f4f4f4;
+            padding: 0;
         }
         .container {
+            max-width: 420px;
+            margin: 60px auto;
+            padding: 20px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             text-align: center;
-            padding: 2em;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
         }
         h1 {
-            font-size: 2em;
-            margin-bottom: 1em;
+            margin-top: 0;
+            color: #333;
+            margin-bottom: 20px;
         }
-        button {
-            background-color: #4CAF50;
+        p {
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        a, button {
+            background-color: #4CAF50; /* Tam yeşil */
             color: white;
-            padding: 0.7em 1.5em;
-            margin: 1em;
-            font-size: 1em;
-            cursor: pointer;
             border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
+            padding: 12px;
+            width: 100%;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+            box-sizing: border-box;
         }
-        button:hover {
-            background-color: #45a049;
+        a:hover, button:hover {
+            background-color: #388e3c; /* Koyu yeşil hover */
+            text-decoration: none;
+        }
+        form {
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Welcome</h1>
-    <a href="register.php"><button>Register</button></a>
-    <a href="login.php"><button>Login</button></a>
+    <div class="card">
+        <h1>Welcome</h1>
+
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <p>Hello, <?= htmlspecialchars($_SESSION['email']) ?>!</p>
+            <a href="dashboard.php">Go to Dashboard</a>
+            <form method="post" action="logout.php">
+                <button type="submit">Logout</button>
+            </form>
+        <?php else: ?>
+            <a href="login.php">Login</a>
+            <a href="register.php">Register</a>
+        <?php endif; ?>
+    </div>
 </div>
 
 </body>

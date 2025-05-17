@@ -1,9 +1,14 @@
 <?php
 session_start();
 
-session_unset();
-session_destroy();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+    if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
+        die('Invalid CSRF token');
+    }
 
-header('Location: login.php');
-exit;
+    session_destroy();
+    header('Location: index.php');
+    exit;
+}
 ?>
