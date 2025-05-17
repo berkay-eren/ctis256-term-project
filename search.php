@@ -37,7 +37,153 @@ if ($searchTerm !== '') {
     <meta charset="UTF-8">
     <title>Search Products</title>
     <style>
-        /* CSS buraya aynen gelecek, önceki gönderdiğin stil kodlarını kullanabilirsin */
+        body {
+            background: #e6f4ea;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 700;
+            color: #4CAF50;
+            font-size: 2rem;
+        }
+        .back-button {
+            padding: 6px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-block;
+            user-select: none;
+            transition: background-color 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: #388e3c;
+        }
+        form {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        input[type="text"] {
+            width: 60%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+        button[type="submit"] {
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button[type="submit"]:hover {
+            background-color: #388e3c;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .product-card {
+            background-color: #f9fff7;
+            border-radius: 12px;
+            border: 1px solid #a1d8a3;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.2s ease;
+            position: relative;
+            color: #333;
+        }
+        .product-card:hover {
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
+        }
+        .product-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: #d0f0c0;
+        }
+        .product-info {
+            flex-grow: 1;
+        }
+        .product-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: #2e7d32;
+        }
+        .product-price {
+            margin-bottom: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #4CAF50;
+        }
+        .normal-price {
+            text-decoration: line-through;
+            color: #7b7b7b;
+            margin-right: 10px;
+        }
+        .discounted-price {
+            color: #388e3c;
+            font-weight: 700;
+        }
+        .product-meta {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .add-cart-form {
+            padding: 10px 15px;
+            border-top: 1px solid #eee;
+            background-color: #fafafa;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .add-cart-form input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+        .add-cart-form button {
+            padding: 6px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .add-cart-form button:hover {
+            background-color: #388e3c;
+        }
+
     </style>
 </head>
 <body>

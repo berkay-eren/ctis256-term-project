@@ -34,79 +34,28 @@ foreach ($cart_items as $item) {
     <title>Shopping Cart</title>
     <style>
         body {
-            font-family: Arial;
-            background-color: #f4f7fc;
-            padding: 30px;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: #fff;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-        }
-        h2 {
-            text-align: center;
+            background: #e6f4ea;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
             color: #333;
         }
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #eee;
-            padding: 15px 0;
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
-        .cart-item img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 6px;
-        }
-        .cart-info {
-            flex: 1;
-            margin-left: 20px;
-        }
-        .cart-info h4 {
-            margin: 0 0 5px;
-        }
-        .actions form {
-            display: inline;
-        }
-        .actions button {
-            background-color: #e53935;
-            color: white;
-            padding: 6px 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        .total {
-            text-align: right;
-            font-size: 1.2em;
-            margin-top: 20px;
-        }
-        .purchase-btn {
-            margin-top: 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            float: right;
-        }
-        .empty {
+
+        h2 {
             text-align: center;
-            padding: 40px;
-            color: #777;
-        }
-        input[type="number"] {
-            width: 60px;
-            padding: 4px;
-            font-size: 14px;
+            margin-bottom: 25px;
+            font-weight: 700;
+            color: #4CAF50;
+            font-size: 2rem;
         }
 
         .back-button {
@@ -114,15 +63,120 @@ foreach ($cart_items as $item) {
             background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 4px;
-            margin-left: 0;
+            border-radius: 30px;
+            margin-bottom: 20px;
             text-decoration: none;
             font-size: 14px;
             display: inline-block;
+            user-select: none;
+            transition: background-color 0.3s ease;
         }
+
         .back-button:hover {
-            background-color: #45a049;
+            background-color: #388e3c;
         }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            background-color: #d0f0c0;
+        }
+
+        .cart-info {
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .cart-info h4 {
+            margin: 0 0 5px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #2e7d32;
+        }
+
+        .cart-info p {
+            margin: 3px 0;
+            font-size: 1rem;
+        }
+
+        .actions form {
+            display: inline;
+        }
+
+        .actions button {
+            background-color: #d32f2f;
+            color: white;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            user-select: none;
+        }
+
+        .actions button:hover {
+            background-color: #a12727;
+        }
+
+        .total {
+            text-align: right;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-top: 25px;
+            color: #388e3c;
+        }
+
+        .purchase-btn {
+            margin-top: 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            float: right;
+            user-select: none;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .purchase-btn:hover {
+            background-color: #388e3c;
+            box-shadow: 0 6px 12px rgba(56, 142, 60, 0.5);
+        }
+
+        .empty {
+            text-align: center;
+            padding: 50px;
+            color: #777;
+            font-size: 1.2rem;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 6px 10px;
+            font-size: 1rem;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            border-color: #4CAF50;
+        }
+
     </style>
 </head>
 <body>
