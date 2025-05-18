@@ -6,11 +6,9 @@ require_once 'mail.php';
 $error = '';
 $success = '';
 
-// Hata gösterimi aç
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// E-Posta ile OTP gönder
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_code'])) {
     $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
     if (!$email) {
@@ -29,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_code'])) {
     }
 }
 
-// Kodu doğrula ve kullanıcıyı kaydet
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_code'])) {
     $entered_otp = $_POST['otp'] ?? '';
     $session_otp = $_SESSION['otp'] ?? '';
@@ -41,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_code'])) {
     } elseif ($entered_otp !== $session_otp) {
         $error = "Incorrect verification code.";
     } else {
-        // Form verileri
         $name = trim($data['name']);
         $city = trim($data['city']);
         $district = trim($data['district']);
@@ -50,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_code'])) {
         $user_type = $data['user_type'];
         $verification_code = $session_otp;
 
-        // Şifreyi hash'le
         $passHash = password_hash($password, PASSWORD_DEFAULT);
 
         $stmt = $db->prepare("INSERT INTO users (name, city, district, email, pass, user_type, verification_code, is_verified) VALUES (?, ?, ?, ?, ?, ?, ?, 1)");

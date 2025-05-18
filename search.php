@@ -233,7 +233,6 @@ if ($searchTerm !== '') {
                             <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                             <input type="hidden" name="market_id" value="<?= $product['market_id'] ?>">
                             <input type="number" name="quantity" value="1" min="1" required>
-                            <!-- Burada redirect_to olarak tam sayfa ve query gönderiyoruz -->
                             <input type="hidden" name="redirect_to" value="search.php?q=<?= urlencode($searchTerm) ?>">
                             <button type="submit">Add to Cart</button>
                         </form>

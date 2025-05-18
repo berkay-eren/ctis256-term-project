@@ -15,12 +15,10 @@ require_once './db.php';
 $products = [];
 
 if ($user_type === 'market') {
-    // Market kullanıcısı sadece kendi ürünlerini görür
     $stmt = $db->prepare("SELECT * FROM products WHERE market_id = ? ORDER BY id DESC");
     $stmt->execute([$user_id]);
     $products = $stmt->fetchAll();
 } elseif ($user_type === 'consumer') {
-    // Consumer kullanıcı tüm ürünleri görür
     $stmt = $db->query("SELECT * FROM products ORDER BY id DESC");
     $products = $stmt->fetchAll();
 }
@@ -231,7 +229,6 @@ if ($user_type === 'market') {
     .add-to-cart-btn:hover {
         background-color: #1769aa;
     }
-    /* LOGOUT BUTTON */
     .logout-button {
         background-color: #d32f2f;
         border: none;
