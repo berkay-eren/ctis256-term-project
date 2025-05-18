@@ -70,7 +70,7 @@
    <div class="footer">
         <div class="footer-help">
             <h2>Contact Us</h2>
-            <p>Email: example@example.com </p>
+            <p>256termproject@gmail.com </p>
         </div>
         <div class="footer-links">
             <h2>Quick Links</h2>
@@ -81,11 +81,11 @@
             </ul>
         </div>
         <div class="footer-social">
-            <p>&copy; 2023 E-Shop. All rights reserved.</p>
             <p>Follow us on:
                 <a href="https://www.facebook.com" target="_blank">Facebook</a> |
                 <a href="https://www.twitter.com" target="_blank">Twitter</a> |
                 <a href="https://www.instagram.com" target="_blank">Instagram</a>
+                <p>&copy; 2023 E-Shop. All rights reserved.</p>
             </p>
         </div>
     </div> 

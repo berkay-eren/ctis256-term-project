@@ -14,23 +14,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die('Invalid CSRF token');
     }
 
-    $email = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
+    $email = filter_var(trim($_POST['email'] ?? ''), FILTER_VALIDATE_EMAIL);
     $password = $_POST['pass'] ?? '';
 
     if (!$email) {
-        $error_message = "Invalid email format.";
+        $error_message = "Please enter a valid email address.";
+    } elseif (strlen($password) < 6) {
+        $error_message = "Password must be at least 6 characters.";
     } else {
-        
         $stmt = $db->prepare("SELECT * FROM users WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch();
 
         if ($user && password_verify($password, $user['pass'])) {
+            // Login success: set session and redirect
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
             $_SESSION['user_type'] = $user['user_type'] ?? '';
             $_SESSION['city'] = $user['city'] ?? '';
             $_SESSION['district'] = $user['district'] ?? '';
+
             header('Location: dashboard.php');
             exit;
         } else {
@@ -114,13 +117,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form method="POST" action="">
-            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>" />
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>" />
 
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" required value="<?= htmlspecialchars($email) ?>" />
+            <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                value="<?= htmlspecialchars($email) ?>"
+                autocomplete="username"
+            />
 
             <label for="pass">Password</label>
-            <input type="password" id="pass" name="pass" required />
+            <input
+                type="password"
+                id="pass"
+                name="pass"
+                required
+                minlength="6"
+                autocomplete="current-password"
+            />
 
             <button type="submit">Login</button>
         </form>
