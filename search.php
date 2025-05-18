@@ -11,8 +11,8 @@ $searchTerm = isset($_GET['q']) ? trim($_GET['q']) : '';
 $products = [];
 
 if ($searchTerm !== '') {
-    $city = $_SESSION['city'];
-    $district = $_SESSION['district'];
+    $city = $_SESSION['city'] ?? '';
+    $district = $_SESSION['district'] ?? '';
     $today = date('Y-m-d');
 
     $stmt = $db->prepare("
@@ -38,23 +38,42 @@ if ($searchTerm !== '') {
     <title>Search Products</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7fc;
+            background: #e6f4ea;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 30px;
+            padding: 20px;
+            color: #333;
         }
         .container {
-            max-width: 800px;
-            margin: auto;
-            background: #fff;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
         h2 {
             text-align: center;
-            color: #333;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            font-weight: 700;
+            color: #4CAF50;
+            font-size: 2rem;
+        }
+        .back-button {
+            padding: 6px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-block;
+            user-select: none;
+            transition: background-color 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: #388e3c;
         }
         form {
             text-align: center;
@@ -65,6 +84,7 @@ if ($searchTerm !== '') {
             padding: 10px;
             border-radius: 6px;
             border: 1px solid #ccc;
+            font-size: 1rem;
         }
         button[type="submit"] {
             padding: 10px 20px;
@@ -73,84 +93,97 @@ if ($searchTerm !== '') {
             color: white;
             border-radius: 6px;
             cursor: pointer;
+            font-size: 1rem;
+        }
+        button[type="submit"]:hover {
+            background-color: #388e3c;
         }
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
         }
         .product-card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            overflow: hidden;
-            transition: transform 0.2s;
+            background-color: #f9fff7;
+            border-radius: 12px;
+            border: 1px solid #a1d8a3;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.2s ease;
+            position: relative;
+            color: #333;
         }
         .product-card:hover {
-            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
         }
         .product-image {
             width: 100%;
             height: 180px;
             object-fit: cover;
-            background-color: #f0f0f0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: #d0f0c0;
         }
         .product-info {
-            padding: 15px;
+            flex-grow: 1;
         }
         .product-title {
-            font-weight: bold;
-            font-size: 1.1em;
-            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: #2e7d32;
         }
         .product-price {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #4CAF50;
         }
         .normal-price {
-            color: #888;
             text-decoration: line-through;
+            color: #7b7b7b;
+            margin-right: 10px;
         }
         .discounted-price {
-            color: #e53935;
-            font-weight: bold;
+            color: #388e3c;
+            font-weight: 700;
         }
         .product-meta {
-            font-size: 0.9em;
-            color: #666;
+            font-size: 0.9rem;
+            color: #555;
         }
         .add-cart-form {
             padding: 10px 15px;
             border-top: 1px solid #eee;
             background-color: #fafafa;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         .add-cart-form input[type="number"] {
             width: 60px;
             padding: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
         }
         .add-cart-form button {
             padding: 6px 12px;
             background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 4px;
-            margin-left: 10px;
+            border-radius: 6px;
             cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .add-cart-form button:hover {
+            background-color: #388e3c;
         }
 
-        .back-button {
-            padding: 6px 12px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            margin-left: 0;
-            text-decoration: none;
-            font-size: 14px;
-            display: inline-block;
-        }
-        .back-button:hover {
-            background-color: #45a049;
-        }
     </style>
 </head>
 <body>
@@ -160,7 +193,6 @@ if ($searchTerm !== '') {
         <a href="dashboard.php" class="back-button">← Back to Dashboard</a>
     </div>
     <h2 style="text-align: center;">Search Products</h2>
-
 
     <form method="GET">
         <input type="text" name="q" placeholder="Enter product name..." value="<?= htmlspecialchars($searchTerm) ?>" required>
@@ -197,10 +229,11 @@ if ($searchTerm !== '') {
                             </div>
                         </div>
 
-                        <form method="POST" action="add_to_cart.php?q=<?= urlencode($searchTerm) ?>" class="add-cart-form">
+                        <form method="POST" action="add_to_cart.php" class="add-cart-form">
                             <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                             <input type="hidden" name="market_id" value="<?= $product['market_id'] ?>">
                             <input type="number" name="quantity" value="1" min="1" required>
+                            <input type="hidden" name="redirect_to" value="search.php?q=<?= urlencode($searchTerm) ?>">
                             <button type="submit">Add to Cart</button>
                         </form>
                     </div>

@@ -6,66 +6,57 @@ require_once 'mail.php';
 $error = '';
 $success = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
-    if (isset($_POST['send_otp'])) {
-        $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
-        if (!$email) {
-            $error = "Please enter a valid email.";
-        } else {
-            $otp = rand(100000, 999999);
-            $_SESSION['otp'] = $otp;
-            $_SESSION['otp_email'] = $email;
-            $_SESSION['otp_time'] = time();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-            if (sendVerificationCode($email, $otp)) {
-                $_SESSION['otp_sent'] = true;
-                $success = "Verification code sent to your email.";
-            } else {
-                $error = "Failed to send email. Please try again.";
-            }
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_code'])) {
+    $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+    if (!$email) {
+        $error = "Please enter a valid email.";
+    } else {
+        $otp = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+        $_SESSION['otp'] = $otp;
+        $_SESSION['register_data'] = $_POST;
+        $_SESSION['otp_time'] = time();
+
+        if (sendVerificationCode($email, $otp)) {
+            $success = "Verification code sent to your email.";
+        } else {
+            $error = "Failed to send email. Please try again.";
         }
     }
+}
 
-    if (isset($_POST['verify_otp'])) {
-        $email = $_SESSION['otp_email'] ?? '';
-        $user_otp = $_POST['otp'] ?? '';
-        $password = $_POST['pass'] ?? '';
-        $user_type = $_POST['user_type'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_code'])) {
+    $entered_otp = $_POST['otp'] ?? '';
+    $session_otp = $_SESSION['otp'] ?? '';
+    $data = $_SESSION['register_data'] ?? [];
 
-        if (!isset($_SESSION['otp_time']) || (time() - $_SESSION['otp_time']) > 600) {
-            $error = "Verification code expired. Please request a new one.";
-            unset($_SESSION['otp'], $_SESSION['otp_email'], $_SESSION['otp_time'], $_SESSION['otp_sent']);
-        }
+    if (!$data || time() - $_SESSION['otp_time'] > 600) {
+        $error = "Verification code expired. Please try again.";
+        unset($_SESSION['otp'], $_SESSION['register_data'], $_SESSION['otp_time']);
+    } elseif ($entered_otp !== $session_otp) {
+        $error = "Incorrect verification code.";
+    } else {
+        $name = trim($data['name']);
+        $city = trim($data['city']);
+        $district = trim($data['district']);
+        $email = $data['email'];
+        $password = $data['password'];
+        $user_type = $data['user_type'];
+        $verification_code = $session_otp;
 
-        elseif (!isset($_SESSION['otp']) || $user_otp != $_SESSION['otp']) {
-            $error = "Incorrect verification code.";
-        }
-       
-        elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $error = "Invalid email address.";
-        }
-        
-        elseif (strlen($password) < 6) {
-            $error = "Password must be at least 6 characters.";
-        }
-       
-        elseif (!in_array($user_type, ['consumer', 'market'])) {
-            $error = "Please select a valid user type.";
-        }
-        else {
-            $passHash = password_hash($password, PASSWORD_DEFAULT);
+        $passHash = password_hash($password, PASSWORD_DEFAULT);
 
-            $stmt = $db->prepare("INSERT INTO users (email, pass, user_type, is_verified) VALUES (?, ?, ?, ?)");
-            $inserted = $stmt->execute([$email, $passHash, $user_type, 1]);
+        $stmt = $db->prepare("INSERT INTO users (name, city, district, email, pass, user_type, verification_code, is_verified) VALUES (?, ?, ?, ?, ?, ?, ?, 1)");
+        $inserted = $stmt->execute([$name, $city, $district, $email, $passHash, $user_type, $verification_code]);
 
-            if ($inserted) {
-                unset($_SESSION['otp'], $_SESSION['otp_email'], $_SESSION['otp_time'], $_SESSION['otp_sent']);
-                header("Location: registration_success.php");
-                exit;
-            } else {
-                $error = "Error during registration. Please try again.";
-            }
+        if ($inserted) {
+            unset($_SESSION['otp'], $_SESSION['register_data'], $_SESSION['otp_time']);
+            header("Location: login.php");
+            exit;
+        } else {
+            $error = "Failed to register. Try again.";
         }
     }
 }
@@ -74,89 +65,108 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Register</title>
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #e6f4ea;
-    margin: 0; padding: 0;
-}
-.container {
-    max-width: 400px;
-    margin: 3em auto;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-label, select, input, button {
-    width: 100%;
-    margin: 10px 0;
-    box-sizing: border-box;
-}
-input, select {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-button {
-    background-color: #4CAF50;
-    border: none;
-    padding: 10px;
-    color: white;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-button:hover {
-    background-color: #45a049;
-}
-.error {
-    color: red;
-    text-align: center;
-}
-.success {
-    color: green;
-    text-align: center;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f7fc;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 450px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            margin-top: 10px;
+            display: block;
+            font-weight: bold;
+            color: #555;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .message {
+            text-align: center;
+            margin: 10px 0;
+        }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
 </head>
 <body>
 
 <div class="container">
     <h2>Register</h2>
 
-    <?php if($error): ?>
-        <div class="error"><?= htmlspecialchars($error) ?></div>
-    <?php endif; ?>
-    <?php if($success): ?>
-        <div class="success"><?= htmlspecialchars($success) ?></div>
+    <?php if ($error): ?>
+        <div class="message error"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
 
-    <?php if (!isset($_SESSION['otp_sent'])): ?>
+    <?php if ($success): ?>
+        <div class="message success"><?= htmlspecialchars($success) ?></div>
+    <?php endif; ?>
+
+    <?php if (!isset($_SESSION['otp'])): ?>
         <form method="POST">
+            <label for="name">Full Name</label>
+            <input type="text" name="name" required>
+
+            <label for="city">City</label>
+            <input type="text" name="city" required>
+
+            <label for="district">District</label>
+            <input type="text" name="district" required>
+
             <label for="email">Email</label>
-            <input type="email" name="email" id="email" required value="<?=htmlspecialchars($_POST['email'] ?? '')?>">
-            <button type="submit" name="send_otp">Send Verification Code</button>
-        </form>
-    <?php else: ?>
-        <form method="POST">
-            <label for="otp">Verification Code</label>
-            <input type="text" name="otp" id="otp" maxlength="6" pattern="\d{6}" required>
+            <input type="email" name="email" required>
 
-            <label for="pass">Password</label>
-            <input type="password" name="pass" id="pass" required>
+            <label for="password">Password</label>
+            <input type="password" name="password" required minlength="6">
 
             <label for="user_type">User Type</label>
-            <select name="user_type" id="user_type" required>
+            <select name="user_type" required>
                 <option value="">Select</option>
                 <option value="consumer">Consumer</option>
                 <option value="market">Market</option>
             </select>
 
-            <button type="submit" name="verify_otp">Register</button>
+            <button type="submit" name="send_code">Send Verification Code</button>
+        </form>
+    <?php else: ?>
+        <form method="POST">
+            <label for="otp">Enter Verification Code</label>
+            <input type="text" name="otp" maxlength="6" pattern="\d{6}" required>
+
+            <button type="submit" name="verify_code">Complete Registration</button>
         </form>
     <?php endif; ?>
 </div>
