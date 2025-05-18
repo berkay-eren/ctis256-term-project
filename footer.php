@@ -28,8 +28,10 @@
             text-align: left;
             margin: 0;
         }
-        .footer-help h2 {
+        .footer h2 {
             color: #4CAF50;
+            padding: 0;
+            margin: 0;
         }
         .footer-help p {
             margin: 0;
@@ -51,7 +53,7 @@
             display: inline;
         }
         .footer a {
-            color: #4CAF50;
+            color: white;
             text-decoration: none;
             font-weight: bold;
         }
@@ -61,8 +63,16 @@
             text-align: right;
             gap: 10px;
         }
+        .footer-social a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
         .footer p {
             margin: 0;
+            padding: 0;
+            font-size: 14px;
+            color: white;
         }
     </style>
 </head>

@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 ?>
 <style>
-    * {
+    .header * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
@@ -18,15 +18,20 @@ if (session_status() === PHP_SESSION_NONE) {
         justify-content: space-between;
         align-items: center;
     }
-    img {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-    }
     #company-info {
         display: flex;
         align-items: center;
         gap: 20px;
+    }
+    #company-info img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+    }
+    #company-info h1 {
+        color: white;
+        margin: 0;
+        padding: 0;
     }
     #company-slogan h2 {
         color: greenyellow;

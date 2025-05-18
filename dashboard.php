@@ -187,6 +187,7 @@ if ($user_type === 'market') {
         padding: 3px 10px;
         border-radius: 20px;
         box-shadow: 0 0 6px #d32f2faa;
+        z-index: 2;
     }
     .product-actions {
         margin-top: 15px;
