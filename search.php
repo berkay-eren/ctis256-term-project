@@ -8,13 +8,32 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'consumer') {
 }
 
 $searchTerm = isset($_GET['q']) ? trim($_GET['q']) : '';
+$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$perPage = 4;
+$offset = ($page - 1) * $perPage;
+
 $products = [];
+$totalPages = 1;
 
 if ($searchTerm !== '') {
     $city = $_SESSION['city'] ?? '';
     $district = $_SESSION['district'] ?? '';
     $today = date('Y-m-d');
+    $keyword = '%' . $searchTerm . '%';
 
+    // Toplam ürün sayısını bul
+    $countStmt = $db->prepare("
+        SELECT COUNT(*) FROM products p
+        JOIN users u ON p.market_id = u.id
+        WHERE u.city = ? 
+        AND p.expiration_date >= ? 
+        AND p.title LIKE ?
+    ");
+    $countStmt->execute([$city, $today, $keyword]);
+    $totalProducts = $countStmt->fetchColumn();
+    $totalPages = ceil($totalProducts / $perPage);
+
+    // Sayfa başına ürünleri getir
     $stmt = $db->prepare("
         SELECT p.*, u.city, u.district 
         FROM products p
@@ -23,21 +42,27 @@ if ($searchTerm !== '') {
         AND p.expiration_date >= ? 
         AND p.title LIKE ? 
         ORDER BY (u.district = ?) DESC
-        LIMIT 8
+        LIMIT ? OFFSET ?
     ");
-    $keyword = '%' . $searchTerm . '%';
-    $stmt->execute([$city, $today, $keyword, $district]);
+    $stmt->bindValue(1, $city);
+    $stmt->bindValue(2, $today);
+    $stmt->bindValue(3, $keyword);
+    $stmt->bindValue(4, $district);
+    $stmt->bindValue(5, $perPage, PDO::PARAM_INT);
+    $stmt->bindValue(6, $offset, PDO::PARAM_INT);
+    $stmt->execute();
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
 
+<!-- HTML kısmı aynı kalabilir, sadece aşağıya pagination eklendi -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Search Products</title>
     <style>
-        body {
+                body {
             background: #e6f4ea;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -182,7 +207,22 @@ if ($searchTerm !== '') {
         .add-cart-form button:hover {
             background-color: #388e3c;
         }
-
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .pagination a {
+            padding: 8px 12px;
+            margin: 0 4px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .pagination a.active {
+            background-color: #2e7d32;
+        }
     </style>
 </head>
 <body>
@@ -232,11 +272,18 @@ if ($searchTerm !== '') {
                             <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                             <input type="hidden" name="market_id" value="<?= $product['market_id'] ?>">
                             <input type="number" name="quantity" value="1" min="1" required>
-                            <input type="hidden" name="redirect_to" value="search.php?q=<?= urlencode($searchTerm) ?>">
+                            <input type="hidden" name="redirect_to" value="search.php?q=<?= urlencode($searchTerm) ?>&page=<?= $page ?>">
                             <button type="submit">Add to Cart</button>
                         </form>
                     </div>
                 <?php endforeach; ?>
+            </div>
+
+            <!-- Pagination Links -->
+            <div class="pagination">
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <a href="?q=<?= urlencode($searchTerm) ?>&page=<?= $i ?>" class="<?= $i === $page ? 'active' : '' ?>"><?= $i ?></a>
+                <?php endfor; ?>
             </div>
         <?php endif; ?>
     <?php endif; ?>
@@ -244,3 +291,4 @@ if ($searchTerm !== '') {
 <?php include 'footer.php' ?>
 </body>
 </html>
+
