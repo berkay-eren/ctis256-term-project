@@ -176,7 +176,7 @@ if ($user_type === 'market') {
         filter: grayscale(90%);
     }
     .product-card.expired::before {
-        content: "SÜRESİ DOLDU";
+        content: "EXPIRED";
         position: absolute;
         top: 10px;
         right: 10px;

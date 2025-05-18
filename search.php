@@ -21,7 +21,6 @@ if ($searchTerm !== '') {
     $today = date('Y-m-d');
     $keyword = '%' . $searchTerm . '%';
 
-    // Toplam ürün sayısını bul
     $countStmt = $db->prepare("
         SELECT COUNT(*) FROM products p
         JOIN users u ON p.market_id = u.id
@@ -33,7 +32,6 @@ if ($searchTerm !== '') {
     $totalProducts = $countStmt->fetchColumn();
     $totalPages = ceil($totalProducts / $perPage);
 
-    // Sayfa başına ürünleri getir
     $stmt = $db->prepare("
         SELECT p.*, u.city, u.district 
         FROM products p
@@ -55,7 +53,6 @@ if ($searchTerm !== '') {
 }
 ?>
 
-<!-- HTML kısmı aynı kalabilir, sadece aşağıya pagination eklendi -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
