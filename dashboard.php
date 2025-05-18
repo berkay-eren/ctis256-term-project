@@ -35,12 +35,11 @@ if ($user_type === 'market') {
         background: #e6f4ea;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         margin: 0;
-        padding: 20px;
         color: #333;
     }
     .container {
         max-width: 900px;
-        margin: 0 auto;
+        margin: 20px auto;
         background-color: #fff;
         padding: 25px 30px;
         border-radius: 12px;
@@ -107,7 +106,7 @@ if ($user_type === 'market') {
     }
     .product-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 20px;
     }
     .product-card {
@@ -120,13 +119,15 @@ if ($user_type === 'market') {
         transition: box-shadow 0.2s ease;
         position: relative;
         color: #333;
+        align-items: center;
+        width: 250px;
     }
     .product-card:hover {
         box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
     }
     .product-image {
-        width: 100%;
-        height: 180px;
+        width: 150px;
+        height: 150px;
         object-fit: cover;
         border-radius: 8px;
         margin-bottom: 15px;
@@ -134,6 +135,10 @@ if ($user_type === 'market') {
     }
     .product-info {
         flex-grow: 1;
+    }
+    form {
+        display: flex;
+        flex-direction: column;
     }
     .product-title {
         font-weight: 600;
@@ -203,12 +208,14 @@ if ($user_type === 'market') {
     }
     .edit-btn {
         background-color: #4CAF50;
+        width: 100px;
     }
     .edit-btn:hover {
         background-color: #388e3c;
     }
     .delete-btn {
         background-color: #d32f2f;
+        width: 100px;
     }
     .delete-btn:hover {
         background-color: #a12727;
@@ -218,7 +225,7 @@ if ($user_type === 'market') {
         color: white;
         border: none;
         padding: 10px 0;
-        width: 100%;
+        width: 150px;
         border-radius: 8px;
         font-weight: 600;
         cursor: pointer;
@@ -252,7 +259,7 @@ if ($user_type === 'market') {
 </style>
 </head>
 <body>
-
+<?php include 'header.php' ?>
 <div class="container">
     <h2>Welcome to Our Market</h2>
 
@@ -315,7 +322,7 @@ if ($user_type === 'market') {
                             <form method="POST" action="add_to_cart.php" style="margin-top: 10px;">
                                 <input type="hidden" name="product_id" value="<?= $product['id']; ?>">
                                 <input type="hidden" name="market_id" value="<?= $product['market_id']; ?>">
-                                <input type="number" name="quantity" value="1" min="1" max="<?= $product['stock'] ?>" required style="width: 60px;">
+                                <input type="number" name="quantity" value="1" min="1" max="<?= $product['stock'] ?>" required style="width: 100px;">
                                 <button type="submit" class="add-to-cart-btn">Add to Cart</button>
                             </form>
                         <?php endif; ?>
@@ -330,6 +337,6 @@ if ($user_type === 'market') {
         <button type="submit" class="logout-button">Log Out</button>
     </form>
 </div>
-
+<?php include 'footer.php' ?>
 </body>
 </html>

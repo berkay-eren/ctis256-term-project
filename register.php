@@ -66,17 +66,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_code'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <style>
         body {
             font-family: Arial;
-            background: #f4f7fc;
+            background: #e6f4ea;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .container {
             max-width: 450px;
-            margin: auto;
+            margin: 2em auto;
             background: white;
             padding: 25px;
             border-radius: 8px;
@@ -123,53 +128,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_code'])) {
     </style>
 </head>
 <body>
+    <?php include 'header.php'; ?>
 
-<div class="container">
-    <h2>Register</h2>
+    <div class="container">
+        <h2>Register</h2>
 
-    <?php if ($error): ?>
-        <div class="message error"><?= htmlspecialchars($error) ?></div>
-    <?php endif; ?>
+        <?php if ($error): ?>
+            <div class="message error"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
 
-    <?php if ($success): ?>
-        <div class="message success"><?= htmlspecialchars($success) ?></div>
-    <?php endif; ?>
+        <?php if ($success): ?>
+            <div class="message success"><?= htmlspecialchars($success) ?></div>
+        <?php endif; ?>
 
-    <?php if (!isset($_SESSION['otp'])): ?>
-        <form method="POST">
-            <label for="name">Full Name</label>
-            <input type="text" name="name" required>
+        <?php if (!isset($_SESSION['otp'])): ?>
+            <form method="POST">
+                <label for="name">Full Name</label>
+                <input type="text" name="name" required>
 
-            <label for="city">City</label>
-            <input type="text" name="city" required>
+                <label for="city">City</label>
+                <input type="text" name="city" required>
 
-            <label for="district">District</label>
-            <input type="text" name="district" required>
+                <label for="district">District</label>
+                <input type="text" name="district" required>
 
-            <label for="email">Email</label>
-            <input type="email" name="email" required>
+                <label for="email">Email</label>
+                <input type="email" name="email" required>
 
-            <label for="password">Password</label>
-            <input type="password" name="password" required minlength="6">
+                <label for="password">Password</label>
+                <input type="password" name="password" required minlength="6">
 
-            <label for="user_type">User Type</label>
-            <select name="user_type" required>
-                <option value="">Select</option>
-                <option value="consumer">Consumer</option>
-                <option value="market">Market</option>
-            </select>
+                <label for="user_type">User Type</label>
+                <select name="user_type" required>
+                    <option value="">Select</option>
+                    <option value="consumer">Consumer</option>
+                    <option value="market">Market</option>
+                </select>
 
-            <button type="submit" name="send_code">Send Verification Code</button>
-        </form>
-    <?php else: ?>
-        <form method="POST">
-            <label for="otp">Enter Verification Code</label>
-            <input type="text" name="otp" maxlength="6" pattern="\d{6}" required>
+                <button type="submit" name="send_code">Send Verification Code</button>
+            </form>
+        <?php else: ?>
+            <form method="POST">
+                <label for="otp">Enter Verification Code</label>
+                <input type="text" name="otp" maxlength="6" pattern="\d{6}" required>
 
-            <button type="submit" name="verify_code">Complete Registration</button>
-        </form>
-    <?php endif; ?>
-</div>
+                <button type="submit" name="verify_code">Complete Registration</button>
+            </form>
+        <?php endif; ?>
+    </div>
 
+    <?php include 'footer.php'; ?>
 </body>
 </html>

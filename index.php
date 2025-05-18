@@ -18,11 +18,19 @@ if (empty($_SESSION['csrf_token'])) {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .container {
-            max-width: 420px;
-            margin: 60px auto;
+            width: 420px;
+            height: 300px;
             padding: 20px;
+            display: flex;
+            align-self: center;
+            justify-items: center;
+            align-items: center;
         }
         .card {
             background: #fff;
@@ -30,6 +38,8 @@ if (empty($_SESSION['csrf_token'])) {
             padding: 30px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             text-align: center;
+            width: 380px;
+            height: 270px;
         }
         h1 {
             margin-top: 0;
@@ -41,7 +51,7 @@ if (empty($_SESSION['csrf_token'])) {
             font-size: 16px;
             margin-bottom: 20px;
         }
-        a, button {
+        .card a, button {
             background-color: #4CAF50; 
             color: white;
             border: none;
@@ -57,7 +67,7 @@ if (empty($_SESSION['csrf_token'])) {
             transition: background-color 0.3s ease;
             box-sizing: border-box;
         }
-        a:hover, button:hover {
+        .card a:hover, button:hover {
             background-color: #388e3c; 
             text-decoration: none;
         }
@@ -67,23 +77,26 @@ if (empty($_SESSION['csrf_token'])) {
     </style>
 </head>
 <body>
+    <?php include 'header.php'; ?>
+    
+    <div class="container">
+        <div class="card">
+            <h1>Welcome</h1>
 
-<div class="container">
-    <div class="card">
-        <h1>Welcome</h1>
-
-        <?php if (isset($_SESSION['user_id'])): ?>
-            <p>Hello, <?= htmlspecialchars($_SESSION['email']) ?>!</p>
-            <a href="dashboard.php">Go to Dashboard</a>
-            <form method="post" action="logout.php">
-                <button type="submit">Logout</button>
-            </form>
-        <?php else: ?>
-            <a href="login.php">Login</a>
-            <a href="register.php">Register</a>
-        <?php endif; ?>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <p>Hello, <?= htmlspecialchars($_SESSION['email']) ?>!</p>
+                <a href="dashboard.php">Go to Dashboard</a>
+                <form method="post" action="logout.php">
+                    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                    <button type="submit">Logout</button>
+                </form>
+            <?php else: ?>
+                <a href="login.php">Login</a>
+                <a href="register.php">Register</a>
+            <?php endif; ?>
+        </div>
     </div>
-</div>
 
+    <?php include 'footer.php'; ?>
 </body>
 </html>

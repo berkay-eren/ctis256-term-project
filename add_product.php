@@ -191,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="form-group">
                 <label for="product_image">Product Image:</label>
-                <input type="file" id="product_image" name="product_image" accept="image/*" onchange="previewImage(this)">
+                <input type="file" id="product_image" name="product_image" accept="image/*" onchange="previewImage(this)" required>
                 <img id="preview" class="preview-image">
             </div>
 

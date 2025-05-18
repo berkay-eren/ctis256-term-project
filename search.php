@@ -41,12 +41,11 @@ if ($searchTerm !== '') {
             background: #e6f4ea;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 20px;
             color: #333;
         }
         .container {
             max-width: 900px;
-            margin: 0 auto;
+            margin: 20px auto;
             background-color: #fff;
             padding: 25px 30px;
             border-radius: 12px;
@@ -187,7 +186,7 @@ if ($searchTerm !== '') {
     </style>
 </head>
 <body>
-
+<?php include 'header.php' ?>
 <div class="container">
     <div style="text-align: left; margin-bottom: 10px;">
         <a href="dashboard.php" class="back-button">← Back to Dashboard</a>
@@ -242,6 +241,6 @@ if ($searchTerm !== '') {
         <?php endif; ?>
     <?php endif; ?>
 </div>
-
+<?php include 'footer.php' ?>
 </body>
 </html>

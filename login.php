@@ -52,11 +52,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         background-color: #e6f4ea;
         margin: 0;
         padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
     .container {
         width: 100%;
         max-width: 400px;
-        margin: 5em auto;
+        margin: 2em auto;
         padding: 20px;
         background-color: #fff;
         border-radius: 12px;
@@ -100,24 +104,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </style>
 </head>
 <body>
-<div class="container">
-    <h2>Login</h2>
+    <?php include 'header.php'; ?>
 
-    <?php if ($error_message): ?>
-        <div class="error"><?= htmlspecialchars($error_message) ?></div>
-    <?php endif; ?>
+    <div class="container">
+        <h2>Login</h2>
 
-    <form method="POST" action="">
-        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>" />
+        <?php if ($error_message): ?>
+            <div class="error"><?= htmlspecialchars($error_message) ?></div>
+        <?php endif; ?>
 
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required value="<?= htmlspecialchars($email) ?>" />
+        <form method="POST" action="">
+            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>" />
 
-        <label for="pass">Password</label>
-        <input type="password" id="pass" name="pass" required />
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required value="<?= htmlspecialchars($email) ?>" />
 
-        <button type="submit">Login</button>
-    </form>
-</div>
+            <label for="pass">Password</label>
+            <input type="password" id="pass" name="pass" required />
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <?php include 'footer.php'; ?>
 </body>
 </html>
