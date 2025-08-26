@@ -1,4 +1,4 @@
-# ctis256-term-project
-# contributors: Işık Dönger, Berkay Eren, Yağız Emir
+# Term project for CTIS 256 (Introduction to Backend Development) course
+# Contributors: Işık Dönger, Berkay Eren, Yağız Emir Kula
 
-# after opening the project you should drag and drop all sql files into test database
+# After opening the project you should drag and drop all sql files into test database
